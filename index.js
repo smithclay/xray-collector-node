@@ -10,9 +10,15 @@ const insightsClient = new Insights({
     insertKey: process.env.INSIGHTS_INSERT_KEY
 });
 
+const COLLECTION_INTERVAL_MINS = process.env.COLLECTION_INTERVAL_MINS || 5; 
+
 exports.handler = function (event, context, callback) {
     const now = moment().toDate();
-    const fiveminsago = moment().subtract(5, 'hours').toDate();
+    const fiveminsago = moment().subtract(COLLECTION_INTERVAL_MINS, 'minutes').toDate();
+
+    if (process.env.DEBUG_ENV) {
+        log('[event]', JSON.stringify(event));
+    }
 
     xrayClient.getTraceIds(fiveminsago, now, function (err, ids) {
         if (err) {

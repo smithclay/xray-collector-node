@@ -62,7 +62,28 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
-resource "aws_lambda_function" "lambdium" {
+resource "aws_lambda_permission" "lambda" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.xray_collector.arn}"
+  principal     = "events.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_event_rule.trigger_xray_collector.arn}"
+}
+
+resource "aws_cloudwatch_event_rule" "trigger_xray_collector" {
+  name                = "xray-collector"
+  description         = "Scheduled execution of X-Ray collector lambda"
+  // every X minutes
+  schedule_expression = "rate(1 minute)"
+}
+
+resource "aws_cloudwatch_event_target" "xray_lambda_target" {
+  rule      = "${aws_cloudwatch_event_rule.trigger_xray_collector.name}"
+  target_id = "xray-collector"
+  arn       = "${aws_lambda_function.xray_collector.arn}"
+}
+
+resource "aws_lambda_function" "xray_collector" {
   filename         = "lambda_function.zip"
   function_name    = "xray-collector"
   role             = "${aws_iam_role.iam_for_lambda.arn}"
@@ -75,6 +96,7 @@ resource "aws_lambda_function" "lambdium" {
   environment {
     variables = {
       DEBUG_ENV = "true"
+      COLLECTION_INTERVAL_MINS = 5
       INSIGHTS_INSERT_KEY = "${var.insights_insert_key}"
       NEWRELIC_ACCOUNT_ID = "${var.newrelic_account_id}"
     }
