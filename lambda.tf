@@ -4,7 +4,7 @@ variable "newrelic_account_id" {}
 variable "insights_insert_key" {}
 
 variable "collection_interval_mins" {
-  default = 1
+  default = 2
 }
 
 variable "aws_region" {
@@ -78,7 +78,7 @@ resource "aws_cloudwatch_event_rule" "trigger_xray_collector" {
   name                = "xray-collector"
   description         = "Scheduled execution of X-Ray collector lambda"
   // every X minutes
-  schedule_expression = "rate(${var.collection_interval_mins} minute)"
+  schedule_expression = "rate(${var.collection_interval_mins} minutes)"
 }
 
 resource "aws_cloudwatch_event_target" "xray_lambda_target" {
