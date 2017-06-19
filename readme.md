@@ -12,17 +12,17 @@ This project uses [Terraform](https://terraform.io) to create the Lambda functio
 
 To build the function deployment archive:
 
-```sh
+```
   $ make lambda
-``
+```
 
 To create a plan:
-```sh
+```
   $ terraform plan
 ```
 
 To commit the plan and create the Lambda functions:
-```sh
+```
   $ terraform apply
 ```
 
