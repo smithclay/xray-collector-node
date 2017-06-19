@@ -4,7 +4,7 @@ This code turns AWS X-Ray Trace into New Relic Insights Events for analysis.
 
 This is not an official New Relic project and not supported by New Relic. It is for demonstration purposes only.
 
-![architecture](https://user-images.githubusercontent.com/27153/27302360-9950ac90-54eb-11e7-9d55-8d233ae02fd8.png)
+![image](https://user-images.githubusercontent.com/27153/27302528-3f8ac21c-54ec-11e7-9cf8-25fb0ec29277.png)
 
 ## Installation
 
